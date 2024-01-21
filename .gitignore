@@ -3,4 +3,7 @@ test_joystick
 test_event
 go.sum
 go.mod
+test_opengl2
+test_opengl3
+test_opengles3
 test_opengl

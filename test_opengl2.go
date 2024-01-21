@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	var winTitle string = "Go-SDL2 + OpenGL"
+	var winTitle string = "Go-SDL2 + OpenGL 2.1 API"
 	var winWidth, winHeight int32 = 640, 480
 	var window *sdl.Window
 	var context sdl.GLContext

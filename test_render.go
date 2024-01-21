@@ -32,7 +32,32 @@ func run() int {
 	}
 	defer sdl.Quit()
 
-	window, err := sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
+	// Get the number of available video drivers
+	numDrivers, err := sdl.GetNumVideoDrivers()
+	if err == nil {
+		fmt.Printf("Number of video drivers: %d\n", numDrivers)
+	} else {
+		fmt.Fprintf(os.Stderr, "Failed to GetNumVideoDrivers! SDL_Error: %s\n", sdl.GetError())
+		return 1
+	}
+
+	// Print the names of available video drivers
+	fmt.Printf("Available video drivers:\n");
+	// Print the names of available video drivers
+	for i := 0; i < numDrivers; i++ {
+		driverName := sdl.GetVideoDriver(i)
+		fmt.Printf("%d: %v\n", i+1, driverName)
+	}
+	// Get the current video driver
+	currentDriver, err := sdl.GetCurrentVideoDriver()
+	if err == nil {
+		fmt.Printf("Current video driver: %s\n", currentDriver)
+	} else {
+		fmt.Fprintf(os.Stderr, "Failed to get current video driver! SDL_Error: %s\n", sdl.GetError())
+		return 1
+	}
+
+	window, err = sdl.CreateWindow(winTitle, sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		winWidth, winHeight, sdl.WINDOW_SHOWN)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", err)
