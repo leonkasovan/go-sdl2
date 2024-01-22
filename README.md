@@ -8,6 +8,7 @@ go mod tidy
 go build test_event.go
 go build test_joystick.go
 go build test_render.go
+go build -tags=gles2 test_opengles3.1.go
 ```
 ## Test Joystick in Steamdeck
 When the executable run in console, joystick won't work because joystick event is redirect as keyboard event.  
