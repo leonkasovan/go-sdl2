@@ -7,3 +7,4 @@ test_opengl2
 test_opengl3
 test_opengles3
 test_opengl
+test_opengl2_shader

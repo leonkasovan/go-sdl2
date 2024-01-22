@@ -16,7 +16,7 @@ const (
 	height = 200
 
 	vertexShaderSource = `
-		#version 330 core
+		#version 140
 
 		layout(location = 0) in vec2 position;
 
@@ -28,7 +28,7 @@ const (
 	`
 
 	fragmentShaderSource = `
-		#version 330 core
+		#version 140
 
 		out vec4 FragColor;
 
