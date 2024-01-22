@@ -7,7 +7,6 @@ import (
 	"fmt"
 	gl "github.com/leonkasovan/gl/v3.1/gles2"
 	"github.com/veandco/go-sdl2/sdl"
-	"os"
 	"runtime"
 )
 
@@ -41,12 +40,13 @@ var (
 
 func main() {
 	runtime.LockOSThread()
+	var err error
 
 	// SDL2 initialization
-	if err := sdl.Init(sdl.INIT_EVERYTHING); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to initialize SDL: %s\n", err)
-		os.Exit(1)
+	if err = sdl.Init(sdl.INIT_EVERYTHING); err != nil {
+		panic(err)
 	}
+	defer sdl.Quit()
 
 	// Set OpenGL version
 	sdl.GLSetAttribute(sdl.GL_CONTEXT_MAJOR_VERSION, 3)
@@ -56,23 +56,20 @@ func main() {
 	window, err := sdl.CreateWindow("Go SDL2 OpenGLES", sdl.WINDOWPOS_UNDEFINED, sdl.WINDOWPOS_UNDEFINED,
 		800, 600, sdl.WINDOW_OPENGL|sdl.WINDOW_SHOWN)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create window: %s\n", err)
-		os.Exit(1)
+		panic(err)
 	}
 	defer window.Destroy()
 
 	// Create SDL OpenGL context
 	context, err := window.GLCreateContext()
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to create OpenGL context: %s\n", err)
-		os.Exit(1)
+		panic(err)
 	}
 	defer sdl.GLDeleteContext(context)
 
 	// Initialize GLES2
 	if err := gl.Init(); err != nil {
-		fmt.Fprintf(os.Stderr, "Failed to initialize OpenGL: %s\n", err)
-		os.Exit(1)
+		panic(err)
 	}
 
 	fmt.Printf("Version: %v\nRenderer: %v\n", gl.GoStr(gl.GetString(gl.VERSION)), gl.GoStr((gl.GetString(gl.RENDERER))))
@@ -91,9 +88,13 @@ func main() {
 	running := true
 	for running {
 		for event := sdl.PollEvent(); event != nil; event = sdl.PollEvent() {
-			switch event.(type) {
+			switch t := event.(type) {
 			case *sdl.QuitEvent:
 				running = false
+			case *sdl.KeyboardEvent:
+				if t.Keysym.Sym == 27 {
+					running = false
+				}
 			}
 		}
 
@@ -114,7 +115,6 @@ func main() {
 	gl.DeleteVertexArrays(1, &vao)
 	gl.DeleteBuffers(1, &vbo)
 	gl.DeleteProgram(program)
-	sdl.Quit()
 }
 
 func newProgram(vertexShaderSource, fragmentShaderSource string) (uint32, error) {

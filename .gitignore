@@ -8,3 +8,5 @@ test_opengl3
 test_opengles3
 test_opengl
 test_opengl2_shader
+test_ttf
+test_opengl2_particle
