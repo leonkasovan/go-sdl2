@@ -12,9 +12,9 @@ import (
 
 const (
 	vertexShaderSource = `
-	#version 100
-
-	attribute vec3 position;
+	#version 300 es
+	precision mediump float;
+	in vec3 position;
 
 	void main() {
 		gl_Position = vec4(position, 1.0);
@@ -22,10 +22,11 @@ const (
 	`
 
 	fragmentShaderSource = `
-	#version 100
-
+	#version 300 es
+	precision mediump float;
+	out vec4 FragColor;
 	void main() {
-		gl_FragColor = vec4(1.0, 0.5, 0.2, 1.0);
+		FragColor = vec4(1.0, 0.5, 0.2, 1.0);
 	}
 	`
 )
@@ -118,11 +119,12 @@ func main() {
 }
 
 func newProgram(vertexShaderSource, fragmentShaderSource string) (uint32, error) {
+	fmt.Printf("\nVertex script:\n%v\n", vertexShaderSource)
 	vertexShader, err := compileShader(vertexShaderSource, gl.VERTEX_SHADER)
 	if err != nil {
 		return 0, err
 	}
-
+	fmt.Printf("\nFragment script:\n%v\n", fragmentShaderSource)
 	fragmentShader, err := compileShader(fragmentShaderSource, gl.FRAGMENT_SHADER)
 	if err != nil {
 		return 0, err
