@@ -9,6 +9,12 @@ go build test_event.go
 go build test_joystick.go
 go build test_render.go
 go build -tags=gles2 test_opengles3.1.go
+
+#Built for RG35XX
+CGO_CFLAGS="-Os -marm -march=armv7-a -mtune=cortex-a9 -mfpu=neon-fp16 -mfloat-abi=hard" GOOS=linux GOARCH=arm CGO_ENABLED=1 go build test_render.go
+
+#Built for RG353P
+GOOS=linux GOARCH=arm64 CGO_ENABLED=1 go build test_render.go
 ```
 ## Test Joystick in Steamdeck
 When the executable run in console, joystick won't work because joystick event is redirect as keyboard event.  
